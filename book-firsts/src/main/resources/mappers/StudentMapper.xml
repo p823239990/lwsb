@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bd10.bootfirst.dao.StuDao">
+	
+
+
+	<select id="getStus" resultType="com.bd10.bootfirst.entity.Book">
+		SELECT b.bid, b.bName, GROUP_CONCAT(a.aName SEPARATOR ' ') aName, b.bPrice
+FROM book b,
+     author a,
+     relevance r
+WHERE r.aId = a.aId
+  AND r.bId = b.bId
+GROUP BY b.bId;
+	</select>
+
+    <select id="mohuStus" resultType="com.bd10.bootfirst.entity.Book">
+        SELECT b.bid, b.bName, GROUP_CONCAT(a.aName SEPARATOR ' ') aName, b.bPrice
+FROM book b,
+     author a,
+     relevance r
+WHERE r.aId = a.aId AND a.aname LIKE concat('%',#{name},'%')
+  AND r.bId = b.bId
+GROUP BY b.bId
+
+    </select>
+
+    <select id="select" resultType="com.bd10.bootfirst.entity.Book">
+        SELECT * FROM
+        (SELECT b.bid, b.bName, GROUP_CONCAT(a.aName SEPARATOR ' ') AS aName, b.bPrice
+        FROM book b,
+        author a,
+        relevance r
+        WHERE r.aId = a.aId
+        AND r.bId = b.bId
+        GROUP BY b.bId) AS ab
+        WHERE ab.aName LIKE concat('%',#{aName},'%') LIMIT #{page},5
+    </select>
+
+
+</mapper>
+
+
+
+
